@@ -6,6 +6,9 @@ const foodsRoutes = Router();
 
 const foodsController = new FoodsController();
 
+foodsRoutes.get("/", foodsController.index);
 foodsRoutes.post("/", foodsController.create);
+foodsRoutes.get("/:id", foodsController.show);
+foodsRoutes.delete("/:id", foodsController.delete);
 
 module.exports = foodsRoutes;

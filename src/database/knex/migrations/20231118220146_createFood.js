@@ -1,6 +1,6 @@
 exports.up = knex => knex.schema.createTable("foods", table => {
     table.increments("id");
-    table.text("name");
+    table.text("title");
     table.text("image");
     table.text("price");
     table.text("type");
