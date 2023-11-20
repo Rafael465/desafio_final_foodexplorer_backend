@@ -3,6 +3,7 @@ const knex = require("../database/knex");
 class FoodsController {
     async create(request, response) {
         const { title, image, price, type, description, ingredient } = request.body;
+        
 
         const [food_id] = await knex("foods").insert({
             title,
@@ -21,7 +22,7 @@ class FoodsController {
 
         await knex("ingredient").insert(ingredientInsert);
 
-        return response.json();
+        return response.json({ food_id });
     }
 
     async show(request, response) {
@@ -46,7 +47,9 @@ class FoodsController {
 
     async index(request, response) {
         const { title, ingredient } = request.query;
-
+        
+        //tmb não necessito o usuário aqui
+        
         let foods;
 
         if(ingredient){
