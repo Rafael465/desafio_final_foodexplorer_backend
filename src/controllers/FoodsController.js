@@ -1,29 +1,39 @@
 const knex = require("../database/knex");
-
 class FoodsController {
     async create(request, response) {
         const { title, image, price, type, description, ingredient } = request.body;
+        const user_id = request.user.id;
         
 
-        const [food_id] = await knex("foods").insert({
-            title,
-            image,
-            price,
-            type,
-            description
-        });
+        try {
+            const [food_id] = await knex("foods").insert({
+                title,
+                image,
+                price,
+                type,
+                description,
+                user_id
+            });
+        
+            // rest of the code
+            const ingredientInsert = ingredient.map(name => {
+                return {
+                    food_id,
+                    name
+                }
+            });
+    
+            await knex("ingredient").insert(ingredientInsert);
+            console.log(food_id)
+            return response.json();
+            
+        } catch (error) {
+            console.error(error);
+            return response.status(500).json({ error: 'Internal Server Error' });
+        }
 
-        const ingredientInsert = ingredient.map(name => {
-            return {
-                food_id,
-                name
-            }
-        });
-
-        await knex("ingredient").insert(ingredientInsert);
-
-        return response.json({ food_id });
     }
+
 
     async show(request, response) {
         const { id } = request.params;
@@ -47,8 +57,6 @@ class FoodsController {
 
     async index(request, response) {
         const { title, ingredient } = request.query;
-        
-        //tmb não necessito o usuário aqui
         
         let foods;
 

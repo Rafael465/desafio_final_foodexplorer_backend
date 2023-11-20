@@ -5,6 +5,7 @@ const uploadConfig = require("../configs/upload");
 const FoodsController = require("../controllers/FoodsController");
 const FoodImageController = require("../controllers/FoodImageController");
 const ensureAuthenticated = require("../middleware/ensureAuthenticated");
+const verifyUserAuthorization = require("../middleware/verifyUserAuthorization");
 
 const foodsRoutes = Router();
 const upload = multer(uploadConfig.MULTER);
@@ -14,11 +15,11 @@ const foodImageController = new FoodImageController();
 
 foodsRoutes.use(ensureAuthenticated);
 
-foodsRoutes.post("/", foodsController.create);
+foodsRoutes.post("/", verifyUserAuthorization("admin"), foodsController.create);
 foodsRoutes.get("/:id", foodsController.show);
 foodsRoutes.get("/", foodsController.index);
-foodsRoutes.delete("/:id", foodsController.delete);
-foodsRoutes.patch("/:id", upload.single("image"), foodImageController.create);
+foodsRoutes.delete("/:id", verifyUserAuthorization("admin"), foodsController.delete);
+foodsRoutes.patch("/:id", verifyUserAuthorization("admin"), upload.single("image"), foodImageController.create);
 
 
 module.exports = foodsRoutes;
