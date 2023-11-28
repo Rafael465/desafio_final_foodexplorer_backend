@@ -19,7 +19,7 @@ foodsRoutes.post("/", verifyUserAuthorization("admin"), foodsController.create);
 foodsRoutes.get("/:id", foodsController.show);
 foodsRoutes.get("/", foodsController.index);
 foodsRoutes.delete("/:id", verifyUserAuthorization("admin"), foodsController.delete);
-foodsRoutes.patch("/:id", verifyUserAuthorization("admin"), upload.single("image"), foodImageController.create);
 
+foodsRoutes.patch("/:id", ensureAuthenticated, upload.single("image"), foodImageController.update);
 
 module.exports = foodsRoutes;

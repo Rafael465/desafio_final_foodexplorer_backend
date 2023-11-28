@@ -15,7 +15,6 @@ class FoodsController {
                 user_id
             });
         
-            // rest of the code
             const ingredientInsert = ingredient.map(name => {
                 return {
                     food_id,
@@ -25,7 +24,7 @@ class FoodsController {
     
             await knex("ingredient").insert(ingredientInsert);
             console.log(food_id)
-            return response.json();
+            return response.json({id : food_id});
             
         } catch (error) {
             console.error(error);
