@@ -30,9 +30,46 @@ class FoodsController {
             console.error(error);
             return response.status(500).json({ error: 'Internal Server Error' });
         }
-
     }
 
+    async update(request, response) {
+        const { id } = request.params;
+        const { title, image, price, type, description, ingredient } = request.body;
+
+        try {
+            const existingFood = await knex("foods").where({ id }).first();
+
+            if (!existingFood) {
+                return response.status(404).json({ error: 'Prato não encontrado'});
+            }
+
+            await knex("foods")
+                .where({ id })
+                .update({
+                    title,
+                    image,
+                    price,
+                    type,
+                    description,
+                });
+            
+            await knex("ingredient").where({ food_id: id }).delete(); //deletar ingrediente existente
+
+            const ingredientInsert = ingredient.map(name => {
+                return {
+                    food_id: id,
+                    name
+                }
+            });
+
+            await knex("ingredient").insert(ingredientInsert);
+
+            return response.json({ id });
+        } catch (error) {
+            console.error(error);
+            return response.status(500).json({ error: 'Internal Server Error on update'});
+        }
+    }
 
     async show(request, response) {
         const { id } = request.params;
@@ -91,6 +128,7 @@ class FoodsController {
         
         return response.json(foodsWithIngredient);
     }
+
 
     
 }
