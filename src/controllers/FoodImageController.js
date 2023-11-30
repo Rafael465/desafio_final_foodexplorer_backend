@@ -24,7 +24,7 @@ class FoodImageController {
     
             return response.json();
         } catch (error) {
-            console.error(error);
+            console.error("FoodImageController error", error);
             return response.status(500).json({ error: 'InternalServer Error' });
         }    
     }
